@@ -1,0 +1,57 @@
+name: Nightly Build
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build app
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+          WIN_CSC_LINK: ""
+        run: npm run dist
+
+      - name: Prepare release artifact
+        run: |
+          mkdir release
+          $file = Get-ChildItem dist\*.exe | Select-Object -First 1
+          Copy-Item $file.FullName -Destination "release/Niko-Chat-Nightly.exe"
+        shell: pwsh
+
+      - name: Delete previous nightly release (if exists)
+        uses: dev-drprasad/delete-tag-and-release@v1.1
+        with:
+          tag_name: nightly
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create nightly release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly
+          name: Nightly Build
+          body: |
+            Automatic nightly build from latest commit
+          prerelease: false
+          files: release/Niko-Chat-Nightly.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

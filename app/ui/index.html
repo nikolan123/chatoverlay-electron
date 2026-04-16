@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss: http: https:;">
+  <title>Chat Overlay</title>
+  <link rel="stylesheet" href="../../dist/output.css">
+</head>
+<body class="font-sans overflow-hidden">
+  <div id="overlay" class="w-full h-screen flex flex-col justify-end p-4">
+    <div id="contentContainer" class="flex flex-col justify-end w-full h-full">
+      <!-- Messages area -->
+      <div id="chatArea" class="flex-1 flex flex-col justify-end overflow-hidden pointer-events-none relative">
+        <!-- Floating Resize Handle at the max height limit -->
+        <div id="resizeHandle" class="absolute left-0 right-0 h-4 cursor-ns-resize hover:bg-white/5 transition-colors pointer-events-auto group hidden z-50">
+          <!-- Main Grabber Pill -->
+          <div class="absolute top-1.5 left-1/2 -translate-x-1/2 w-10 h-1 bg-white/40 group-hover:bg-white/70 rounded-full transition-all shadow-lg"></div>
+        </div>
+        <div id="messagesWrapper" class="px-3 py-1 border-x border-t border-white/10 border-b-0 rounded-t overflow-y-auto">
+          <div id="messages" class="flex flex-col"></div>
+        </div>
+      </div>
+      
+      <!-- Input area - always takes up space but transparent when hidden -->
+      <div id="inputContainer" class="flex-shrink-0 h-24">
+        <div id="inputContent" class="p-3 input-mode-hidden h-full">
+          <div id="header" class="flex items-center justify-between mb-2 cursor-grab active:cursor-grabbing">
+            <span class="text-white/60 text-xs font-medium">CHAT</span>
+            <div class="flex gap-2">
+              <button id="settingsBtn" aria-label="Open settings" class="text-white/40 hover:text-white/80 no-drag cursor-pointer p-1">
+                <i data-lucide="settings" class="w-4 h-4" aria-hidden="true"></i>
+              </button>
+              <button id="minimize" aria-label="Close overlay" class="text-white/40 hover:text-white/80 no-drag cursor-pointer p-1">
+                <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+          <div class="relative">
+            <div id="autocomplete" class="absolute bottom-full left-0 right-0 mb-1 bg-black/90 border border-white/20 rounded hidden max-h-48 overflow-y-auto"></div>
+            <div class="flex gap-2">
+              <input type="text" id="messageInput" placeholder="Send a message..." 
+                class="flex-1 px-3 py-2.5 bg-black/40 border border-white/10 text-white text-sm placeholder-white/30 outline-none focus:border-white/30 no-drag" />
+              <button id="sendBtn" aria-label="Send message" class="px-3 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-medium no-drag inline-flex items-center justify-center">
+                <i data-lucide="send" class="w-4 h-4" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../node_modules/lucide/dist/umd/lucide.js"></script>
+  <script src="./js/renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss: http: https:;">
+  <title>Setup Wizard</title>
+  <link rel="stylesheet" href="../../dist/output.css">
+  <style>
+    .titlebar { -webkit-app-region: drag; }
+    .titlebar button { -webkit-app-region: no-drag; }
+    .step { display: none; }
+    .step.active { display: block; }
+  </style>
+</head>
+<body class="bg-gray-900 text-white overflow-hidden">
+  <div class="h-screen flex flex-col bg-black/60 backdrop-blur-md border border-white/10">
+    <!-- Custom titlebar -->
+    <div class="titlebar bg-black/40 border-b border-white/10 px-4 py-3 flex justify-between items-center">
+      <span class="text-sm font-medium text-white/60">SETUP WIZARD</span>
+      <button id="closeBtn" aria-label="Close wizard" class="text-white/40 hover:text-white/80 p-1">
+        <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="flex-1 p-6 overflow-y-auto">
+      <div class="max-w-md mx-auto">
+        <!-- Progress indicator -->
+        <div class="flex justify-center mb-8 gap-2">
+          <div class="progress-dot w-2 h-2 rounded-full bg-white/20" data-step="0"></div>
+          <div class="progress-dot w-2 h-2 rounded-full bg-white/20" data-step="1"></div>
+          <div class="progress-dot w-2 h-2 rounded-full bg-white/20" data-step="2"></div>
+          <div class="progress-dot w-2 h-2 rounded-full bg-white/20" data-step="3"></div>
+        </div>
+
+        <!-- Step 0: Welcome -->
+        <div class="step active" data-step="0">
+          <h1 class="text-2xl font-bold mb-4 text-white">Welcome to Chat Overlay</h1>
+          <p class="text-white/70 mb-6">Let's get you set up in just a few steps. This overlay lets you chat with friends while gaming.</p>
+          <div class="space-y-3 text-sm text-white/60 mb-8">
+            <div class="flex items-start gap-2">
+              <i data-lucide="layers-3" class="w-4 h-4 mt-0.5 text-white/40 shrink-0" aria-hidden="true"></i>
+              <span>Transparent overlay that stays on top of games</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i data-lucide="messages-square" class="w-4 h-4 mt-0.5 text-white/40 shrink-0" aria-hidden="true"></i>
+              <span>Room-based chat with your friends</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i data-lucide="sliders-horizontal" class="w-4 h-4 mt-0.5 text-white/40 shrink-0" aria-hidden="true"></i>
+              <span>Customizable hotkey and appearance</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 1: Username -->
+        <div class="step" data-step="1">
+          <h2 class="text-xl font-bold mb-4 text-white">Choose Your Username</h2>
+          <p class="text-white/70 mb-6">This is how you'll appear to others in chat.</p>
+          <div>
+            <label class="block text-sm font-medium text-white/80 mb-2 flex items-center gap-2">
+              <i data-lucide="user-round" class="w-4 h-4 text-white/40" aria-hidden="true"></i>
+              Username
+            </label>
+            <input type="text" id="wizardUsername" placeholder="Enter your username" 
+              class="w-full px-3 py-2.5 bg-black/40 border border-white/10 text-white text-sm placeholder-white/30 outline-none focus:border-white/30" />
+          </div>
+        </div>
+
+        <!-- Step 2: Server & Room -->
+        <div class="step" data-step="2">
+          <h2 class="text-xl font-bold mb-4 text-white">Connect to Server</h2>
+          <p class="text-white/70 mb-6">Enter your server details and room ID to chat with friends.</p>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-white/80 mb-2 flex items-center gap-2">
+                <i data-lucide="server" class="w-4 h-4 text-white/40" aria-hidden="true"></i>
+                Server URL
+              </label>
+              <input type="text" id="wizardServerUrl" placeholder="ws://localhost:8000" 
+                class="w-full px-3 py-2.5 bg-black/40 border border-white/10 text-white text-sm placeholder-white/30 outline-none focus:border-white/30" />
+              <span class="text-xs text-white/40 mt-1 block">WebSocket server address</span>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-white/80 mb-2 flex items-center gap-2">
+                <i data-lucide="hash" class="w-4 h-4 text-white/40" aria-hidden="true"></i>
+                Room ID
+              </label>
+              <input type="text" id="wizardRoomId" placeholder="my-room" 
+                class="w-full px-3 py-2.5 bg-black/40 border border-white/10 text-white text-sm placeholder-white/30 outline-none focus:border-white/30" />
+              <span class="text-xs text-white/40 mt-1 block">All users must use the same room ID</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Hotkey -->
+        <div class="step" data-step="3">
+          <h2 class="text-xl font-bold mb-4 text-white">Set Your Hotkey</h2>
+          <p class="text-white/70 mb-6">Choose a key to toggle the chat overlay while gaming.</p>
+          <div>
+            <label class="block text-sm font-medium text-white/80 mb-2 flex items-center gap-2">
+              <i data-lucide="keyboard" class="w-4 h-4 text-white/40" aria-hidden="true"></i>
+              Toggle Hotkey
+            </label>
+            <input type="text" id="wizardHotkey" placeholder="Press a key..." readonly
+              class="w-full px-3 py-2.5 bg-black/40 border border-white/10 text-white text-sm placeholder-white/30 outline-none focus:border-white/30 cursor-pointer" />
+            <span class="text-xs text-white/40 mt-1 block">Click and press any key combination</span>
+          </div>
+          <div class="mt-6 p-3 bg-white/5 border border-white/10 rounded">
+            <p class="text-xs text-white/60">
+              <span class="font-medium text-white/80">Tip:</span> Press your hotkey once to open chat, type your message, and press Enter to send. The overlay will automatically hide.
+            </p>
+          </div>
+        </div>
+
+        <!-- Navigation buttons -->
+        <div class="flex gap-3 mt-8">
+          <button id="backBtn" class="px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 text-sm font-medium inline-flex items-center gap-2" style="display: none;">
+            <i data-lucide="arrow-left" class="w-4 h-4" aria-hidden="true"></i>
+            <span>BACK</span>
+          </button>
+          <button id="nextBtn" class="flex-1 px-6 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-medium inline-flex items-center justify-center gap-2">
+            <span>NEXT</span>
+            <i data-lucide="arrow-right" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+          <button id="finishBtn" class="flex-1 px-6 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-medium inline-flex items-center justify-center gap-2" style="display: none;">
+            <i data-lucide="check" class="w-4 h-4" aria-hidden="true"></i>
+            <span>FINISH</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../node_modules/lucide/dist/umd/lucide.js"></script>
+  <script src="./js/wizard.js"></script>
+</body>
+</html>
