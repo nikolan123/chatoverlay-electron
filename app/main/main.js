@@ -222,6 +222,8 @@ function createOverlay() {
   });
 
   attachWindowDebugLogging(overlayWindow, 'overlay');
+  // Keep overlay visible across Spaces, including fullscreen app Spaces on macOS.
+  overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
   overlayWindow.setAlwaysOnTop(true, 'screen-saver');
   overlayWindow.setIgnoreMouseEvents(true, { forward: true });
   overlayWindow.loadFile(path.join(__dirname, '../ui/index.html'));
@@ -369,6 +371,18 @@ function toggleOverlayEnabled() {
   updateTrayMenu();
 }
 
+function disableOverlayInputMode() {
+  isInputMode = false;
+  overlayWindow.setIgnoreMouseEvents(true, { forward: true });
+  overlayWindow.setFocusable(false);
+  overlayWindow.webContents.send('disable-input-mode');
+
+  // On macOS, explicit blur can trigger a visible contraction animation.
+  if (process.platform !== 'darwin') {
+    overlayWindow.blur();
+  }
+}
+
 function toggleOverlay() {
   if (!isOverlayEnabled) return;
   
@@ -382,10 +396,7 @@ function toggleOverlay() {
     overlayWindow.webContents.send('enable-input-mode');
   } else {
     // Disable input mode - ignore mouse events and make unfocusable
-    overlayWindow.setIgnoreMouseEvents(true, { forward: true });
-    overlayWindow.blur();
-    overlayWindow.setFocusable(false);
-    overlayWindow.webContents.send('disable-input-mode');
+    disableOverlayInputMode();
   }
 }
 
@@ -457,11 +468,7 @@ app.whenReady().then(() => {
 
   // Handle hide request from renderer
   ipcMain.on('hide-overlay', () => {
-    isInputMode = false;
-    overlayWindow.setIgnoreMouseEvents(true, { forward: true });
-    overlayWindow.blur();
-    overlayWindow.setFocusable(false);
-    overlayWindow.webContents.send('disable-input-mode');
+    disableOverlayInputMode();
   });
   
   // Open settings window
