@@ -340,7 +340,7 @@ function createTray() {
   const icon = nativeImage.createFromPath(iconPath);
   
   tray = new Tray(icon.resize({ width: 16, height: 16 }));
-  tray.setToolTip('Game Chat Overlay');
+  tray.setToolTip('Dean Chat');
   
   updateTrayMenu();
   

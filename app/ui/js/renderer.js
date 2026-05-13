@@ -1,4 +1,4 @@
-var electronAPI = window.electronAPI || {};
+﻿var electronAPI = window.electronAPI || {};
 
 if (window.lucide?.createIcons) {
   window.lucide.createIcons();
@@ -84,7 +84,7 @@ function buildExternalLink(href, text) {
   }
 
   const safeHref = href.replace(/"/g, '&quot;');
-  return `<a href="${safeHref}" class="text-blue-200 hover:text-blue-100 underline pointer-events-auto cursor-pointer external-link">${text}</a>`;
+  return `<a href="${safeHref}" class="text-purple-200 hover:text-purple-100 underline pointer-events-auto cursor-pointer external-link">${text}</a>`;
 }
 
 // Simple markdown parser
@@ -143,7 +143,7 @@ electronAPI.onSettingsChanged((settings) => {
     contentContainer.style.margin = '0 auto'; // Center it
   }
   
-  // Reconnect to server with new settings
+  // Reconnect to Dean server with new settings
   connectToServer();
 });
 
@@ -291,7 +291,7 @@ function connectToServer() {
   
   // Don't connect if no room ID
   if (!currentSettings.roomId) {
-    console.log('No room ID set, skipping server connection');
+    console.log('No room ID set, skipping Dean server connection');
     return;
   }
   
@@ -303,8 +303,8 @@ function connectToServer() {
     ws = new WebSocket(`${serverUrl}/ws/${roomId}?username=${username}`);
     
     ws.onopen = () => {
-      console.log('Connected to server');
-      addMessage('System', 'Connected to server');
+      console.log('Connected to Dean server');
+      addMessage('System', 'Connected to Dean server');
     };
     
     ws.onmessage = (event) => {
@@ -313,11 +313,11 @@ function connectToServer() {
         
         // Handle different message types
         if (msg.type === 'commands') {
-          // Server sent available commands
+          // Dean server sent available commands
           availableCommands = msg.commands || [];
         } else if (msg.type === 'command_response') {
-          // Server response to a command
-          addMessage('Server', msg.text);
+          // Dean server response to a command
+          addMessage('Dean Server', msg.text);
         } else if (msg.type === 'message') {
           // Regular chat message
           // Don't add our own messages again (server echoes them)
@@ -337,12 +337,12 @@ function connectToServer() {
     
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);
-      addMessage('System', 'Connection error');
+      addMessage('System', 'Dean server connection error');
     };
     
     ws.onclose = () => {
-      console.log('Disconnected from server');
-      addMessage('System', 'Disconnected from server');
+      console.log('Disconnected from Dean server');
+      addMessage('System', 'Disconnected from Dean server');
       ws = null;
       
       // Attempt reconnect after 5 seconds
@@ -353,7 +353,7 @@ function connectToServer() {
     };
   } catch (e) {
     console.error('Failed to connect:', e);
-    addMessage('System', 'Failed to connect to server');
+    addMessage('System', 'Failed to connect to Dean server');
   }
 }
 
@@ -363,7 +363,7 @@ function sendMessage() {
     // Check if it's a command
     const isCommand = text.startsWith('/');
     
-    // Send to server if connected
+    // Send to Dean server if connected
     if (ws && ws.readyState === WebSocket.OPEN) {
       try {
         if (isCommand) {
@@ -382,7 +382,7 @@ function sendMessage() {
     } else {
       // Fallback to local-only mode
       addMessage(currentSettings.username, text);
-      addMessage('System', 'Not connected to server');
+      addMessage('System', 'Not connected to Dean server');
     }
     
     messageInput.value = '';
@@ -608,7 +608,7 @@ function updateTypingIndicator() {
   messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
 }
 
-addMessage('System', 'Chat overlay ready');
+addMessage('System', 'Dean Chat ready');
 
 // Handle external link clicks
 messagesContainer.addEventListener('click', (e) => {

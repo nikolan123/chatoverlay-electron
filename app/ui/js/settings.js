@@ -1,4 +1,4 @@
-var electronAPI = window.electronAPI || {};
+﻿var electronAPI = window.electronAPI || {};
 
 if (window.lucide?.createIcons) {
   window.lucide.createIcons();
@@ -34,7 +34,7 @@ function applySettingsToForm(settings) {
 const hotkeyInput = document.getElementById('hotkey');
 hotkeyInput.addEventListener('click', () => {
   hotkeyInput.value = 'Press any key...';
-  hotkeyInput.classList.add('border-blue-500');
+  hotkeyInput.classList.add('border-purple-500');
 });
 
 hotkeyInput.addEventListener('keydown', (e) => {
@@ -57,7 +57,7 @@ hotkeyInput.addEventListener('keydown', (e) => {
 
   const hotkey = [...modifiers, key].join('+');
   hotkeyInput.value = hotkey;
-  hotkeyInput.classList.remove('border-blue-500');
+  hotkeyInput.classList.remove('border-purple-500');
   hotkeyInput.blur();
 });
 
@@ -135,3 +135,4 @@ async function init() {
 }
 
 init();
+
