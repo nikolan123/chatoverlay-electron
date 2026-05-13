@@ -374,13 +374,14 @@ function toggleOverlayEnabled() {
 function disableOverlayInputMode() {
   isInputMode = false;
   overlayWindow.setIgnoreMouseEvents(true, { forward: true });
-  overlayWindow.setFocusable(false);
-  overlayWindow.webContents.send('disable-input-mode');
 
   // On macOS, explicit blur can trigger a visible contraction animation.
   if (process.platform !== 'darwin') {
     overlayWindow.blur();
   }
+
+  overlayWindow.setFocusable(false);
+  overlayWindow.webContents.send('disable-input-mode');
 }
 
 function toggleOverlay() {
